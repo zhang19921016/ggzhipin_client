@@ -4,6 +4,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types';
 import {NavBar,List,InputItem,WingBlank,WhiteSpace, Radio,Button} from 'antd-mobile'
+import {Redirect} from 'react-router-dom'
 import Logo from '../logo'
 //引入api
 const Item = List.Item;
@@ -33,7 +34,12 @@ export default class Register extends Component {
   }
   render() {
     const {boss} = this.state;
-    const {msgErr} = this.props.user;
+    const {msgErr,RedirectTo} = this.props.user;
+    //路由跳转
+    if (RedirectTo) {
+      console.log(RedirectTo);
+      return <Redirect to={RedirectTo}/>
+    }
     return (
       <div>
         <NavBar>硅谷直聘</NavBar>

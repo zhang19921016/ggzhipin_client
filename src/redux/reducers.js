@@ -8,12 +8,13 @@ const userInitState = {
   username:'',
   type:'',
   _id:'',
-  msgErr:''
+  msgErr:'',
+  RedirectTo:''
 };
 function user (previousState = userInitState,action) {
   switch (action.type) {
     case AUTH_SUCCESS:
-      return action.data;
+      return {...action.data,RedirectTo:getRedirect(action.data.type)};
     case AUTH_ERROR:
       return {...userInitState,...action.data};
     default:
@@ -26,6 +27,19 @@ function yyy (previousState = yyyInitState,action) {
     default:
       return previousState;
   }
+}
+
+function getRedirect (type,header) {
+  let path ='';
+  if (type === 'laoban') {
+    path = '/laoban';
+  }else if (type === 'dashen') {
+    path = '/dashen'
+  }
+  if (!header) {
+    path = path + 'info';
+  }
+  return path;
 }
 
 export default combineReducers({

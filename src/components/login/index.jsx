@@ -4,6 +4,7 @@
 import React, {Component} from 'react'
 import PropTypes from 'prop-types';
 import {NavBar,List,InputItem,WingBlank,WhiteSpace,Button} from 'antd-mobile'
+import {Redirect} from 'react-router-dom'
 import Logo from '../logo'
 
 export default class Login extends Component {
@@ -27,7 +28,12 @@ export default class Login extends Component {
     this.props.history.push('/register');
   }
   render() {
-    const {msgErr} = this.props.user;
+    const {msgErr,RedirectTo} = this.props.user;
+    //路由跳转
+    if (RedirectTo) {
+      console.log(RedirectTo);
+      return <Redirect to={RedirectTo}/>
+    }
     return (
       <div>
         <NavBar>硅谷直聘</NavBar>
