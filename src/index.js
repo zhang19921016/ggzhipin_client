@@ -4,9 +4,10 @@ import {HashRouter,Route,Switch} from 'react-router-dom'
 import {Provider} from 'react-redux'
 //引入store
 import store from './redux/store'
-import Login from './components/login'
-import Register from './components/register'
+import Login from './containers/login'
+import Register from './containers/register'
 import Main from './components/main'
+import './assets/less/msg-err.less'
 
 ReactDOM.render((
 <Provider store={store}>

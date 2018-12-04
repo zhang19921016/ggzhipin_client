@@ -2,54 +2,51 @@
  用户注册的路由组件
  */
 import React, {Component} from 'react'
+import PropTypes from 'prop-types';
 import {NavBar,List,InputItem,WingBlank,WhiteSpace, Radio,Button} from 'antd-mobile'
 import Logo from '../logo'
+//引入api
 const Item = List.Item;
 
 export default class Register extends Component {
+  static propTypes = {
+    register:PropTypes.func.isRequired
+  }
   state = {
     boss:true,
-    userName:'',
-    passWord:'',
-    rePaddWord:''
+    username:'',
+    password:'',
+    rePassword:''
   }
-/*  handleChecked = type => {
-    if (type === 'laoban') {
-      this.setState({
-        boss:true
-      })
-    }else {
-      this.setState({
-        boss: false
-      })
-    }
-  }*/
   handleChange = (type,val) => {
     this.setState({
       [type]:val
     })
   }
-  register = () => {
-    const {boss,userName,passWord,rePaddWord} = this.state;
-    // console.log(boss,userName,passWord,rePaddWord);
+  register = async () => {
+    const {boss,username,password,rePassword} = this.state;
+    console.log(rePassword);
+    await this.props.register({type:boss?'laoban':'dashen',username,password,rePassword})
   }
   replace = () => {
     this.props.history.replace('/login')
   }
   render() {
     const {boss} = this.state;
+    const {msgErr} = this.props.user;
     return (
       <div>
         <NavBar>硅谷直聘</NavBar>
         <Logo/>
+        <p className="msgErr">{msgErr}</p>
         <WingBlank>
           <List>
             <WhiteSpace/>
-            <InputItem onChange = {val => this.handleChange('userName',val)}>用户名:</InputItem>
+            <InputItem onChange = {val => this.handleChange('username',val)}>用户名:</InputItem>
             <WhiteSpace/>
-            <InputItem onChange = {val => this.handleChange('passWord',val)}>密&nbsp;&nbsp;&nbsp;码:</InputItem>
+            <InputItem onChange = {val => this.handleChange('password',val)} type="password">密&nbsp;&nbsp;&nbsp;码:</InputItem>
             <WhiteSpace/>
-            <InputItem onChange = {val => this.handleChange('rePaddWord',val)}>确认密码:</InputItem>
+            <InputItem onChange = {val => this.handleChange('rePassword',val)} type="password">确认密码:</InputItem>
             <WhiteSpace/>
             <Item>用户类型:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <Radio checked={!boss} onChange = {() => this.handleChange('boss',false)}>大神</Radio>&nbsp;&nbsp;&nbsp;&nbsp;
