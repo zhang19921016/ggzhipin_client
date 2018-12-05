@@ -9,12 +9,18 @@ const userInitState = {
   type:'',
   _id:'',
   msgErr:'',
-  RedirectTo:''
+  RedirectTo:'',
+  header:'',
+  post:'',
+  company:'',
+  salary:'',
+  info:''
+
 };
 function user (previousState = userInitState,action) {
   switch (action.type) {
     case AUTH_SUCCESS:
-      return {...action.data,RedirectTo:getRedirect(action.data.type)};
+      return {...action.data,RedirectTo:getRedirect(action.data.type,action.data.header)};
     case AUTH_ERROR:
       return {...userInitState,...action.data};
     default:

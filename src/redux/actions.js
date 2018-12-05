@@ -1,7 +1,7 @@
 /*
 * 负责创建action的actionCreators
 * */
-import {reqRegister,reqLogin} from '../api'
+import {reqRegister,reqLogin,reqUpdate} from '../api'
 import {AUTH_ERROR,AUTH_SUCCESS} from './action-types'
 
 
@@ -54,6 +54,37 @@ export const login = ({username, password}) => {
   }
   return dispatch => {
     reqLogin({username, password})
+      .then(({data}) => {
+        if (data.code === 0) {
+          //请求成功
+          dispatch(authSuccess(data.data));
+        }else{
+          //请求失败
+          dispatch(authError({msgErr:data.msg}))
+
+        }
+      })
+      .catch(err => {
+        dispatch(authError({msgErr:'网络错误'}))
+      })
+
+  }
+}
+//更新个人信息
+export const update = ({header, post, company, salary,info,type}) => {
+  if (!header) {
+    return authError({msgErr:'请选择头像'})
+  }else if (!post) {
+    return authError({msgErr:'请输入职位'})
+  }else if (type === 'laoban' && !company) {
+    return authError({msgErr:'请输入公司名称'})
+  }else if (type === 'laoban' && !salary) {
+    return authError({msgErr:'请输入薪资'})
+  }else if (!info) {
+    return authError({msgErr:type === 'laoban'?'请输入公司信息':'请输入个人信息'})
+  }
+  return dispatch => {
+    reqUpdate({header, post, company, salary,info})
       .then(({data}) => {
         if (data.code === 0) {
           //请求成功
