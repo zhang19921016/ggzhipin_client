@@ -72,7 +72,7 @@ export const login = ({username, password}) => {
 }
 //更新个人信息
 export const update = ({header, post, company, salary,info,type}) => {
-  if (!header) {
+  if (!'header') {
     return authError({msgErr:'请选择头像'})
   }else if (!post) {
     return authError({msgErr:'请输入职位'})

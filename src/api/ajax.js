@@ -14,7 +14,6 @@ export default async function (url,data,method = 'GET') {
     })
     rq = rq.substring(0,rq.length-1);
   }
-  console.log(rq);
   //发送请求
   const type = method.toUpperCase();
   if (type === 'GET') {

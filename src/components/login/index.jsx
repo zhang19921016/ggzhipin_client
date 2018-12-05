@@ -9,6 +9,7 @@ import Logo from '../logo'
 
 export default class Login extends Component {
   static propTypes = {
+    user: PropTypes.object.isRequired,
     login:PropTypes.func.isRequired
   }
   state = {
@@ -25,15 +26,16 @@ export default class Login extends Component {
     await this.props.login({username,password});
   }
   push = () => {
-    this.props.history.push('/register');
+    this.props.history.repalce('/register');
   }
   render() {
     const {msgErr,RedirectTo} = this.props.user;
+    console.log(RedirectTo);
     //路由跳转
     if (RedirectTo) {
-      console.log(RedirectTo);
       return <Redirect to={RedirectTo}/>
     }
+
     return (
       <div>
         <NavBar>硅谷直聘</NavBar>
@@ -42,9 +44,9 @@ export default class Login extends Component {
         <WingBlank>
           <List>
             <WhiteSpace/>
-            <InputItem onChange={vlu => this.handleChange('username',vlu)}>用户名</InputItem>
+            <InputItem onChange={val => this.handleChange('username',val)}>用户名</InputItem>
             <WhiteSpace/>
-            <InputItem onChange={vlu => this.handleChange('password',vlu)} type="password">密 码</InputItem>
+            <InputItem onChange={val => this.handleChange('password',val)} type="password">密 码</InputItem>
             <WhiteSpace/>
             <Button type="primary" onClick={this.login}>登&nbsp;&nbsp;陆</Button>
             <WhiteSpace/>

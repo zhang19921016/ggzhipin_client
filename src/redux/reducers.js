@@ -45,6 +45,7 @@ function getRedirect (type,header) {
   if (!header) {
     path = path + 'info';
   }
+  console.log(header);
   return path;
 }
 
