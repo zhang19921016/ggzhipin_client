@@ -6,7 +6,7 @@ import {Provider} from 'react-redux'
 import store from './redux/store'
 import Login from './containers/login'
 import Register from './containers/register'
-import Main from './components/main'
+import Main from './containers/main'
 import './assets/less/msg-err.less'
 
 ReactDOM.render((

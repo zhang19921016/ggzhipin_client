@@ -2,7 +2,12 @@
 * 通过之前的状态和action生成新的对象
 * */
 import {combineReducers} from 'redux'
-import {AUTH_ERROR,AUTH_SUCCESS} from './action-types'
+import {AUTH_ERROR,
+  AUTH_SUCCESS,
+  UPDATE_USER_INFO,
+  RESET_USER_INFO,
+  UPDATE_USER_LIST,
+  RESET_USER_LIST} from './action-types'
 
 const userInitState = {
   username:'',
@@ -15,7 +20,6 @@ const userInitState = {
   company:'',
   salary:'',
   info:''
-
 };
 function user (previousState = userInitState,action) {
   switch (action.type) {
@@ -23,13 +27,21 @@ function user (previousState = userInitState,action) {
       return {...action.data,RedirectTo:getRedirect(action.data.type,action.data.header)};
     case AUTH_ERROR:
       return {...userInitState,...action.data};
+    case UPDATE_USER_INFO:
+      return {...action.data,RedirectTo:getRedirect(action.data.type,action.data.header)};
+    case RESET_USER_INFO:
+      return {...userInitState,...action.data};
     default:
       return previousState;
   }
 }
-const yyyInitState = {};
-function yyy (previousState = yyyInitState,action) {
+const userListInitState = [];
+function userList (previousState =userListInitState,action) {
   switch (action.type) {
+    case UPDATE_USER_LIST:
+      return action.data;
+    case RESET_USER_LIST:
+      return [];
     default:
       return previousState;
   }
@@ -45,10 +57,9 @@ function getRedirect (type,header) {
   if (!header) {
     path = path + 'info';
   }
-  console.log(header);
   return path;
 }
-
 export default combineReducers({
   user,
+  userList
 })

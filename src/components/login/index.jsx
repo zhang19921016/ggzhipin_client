@@ -30,12 +30,10 @@ export default class Login extends Component {
   }
   render() {
     const {msgErr,RedirectTo} = this.props.user;
-    console.log(RedirectTo);
     //路由跳转
     if (RedirectTo) {
       return <Redirect to={RedirectTo}/>
     }
-
     return (
       <div>
         <NavBar>硅谷直聘</NavBar>

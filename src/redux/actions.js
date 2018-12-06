@@ -1,8 +1,13 @@
 /*
 * 负责创建action的actionCreators
 * */
-import {reqRegister,reqLogin,reqUpdate} from '../api'
-import {AUTH_ERROR,AUTH_SUCCESS} from './action-types'
+import {reqRegister,reqLogin,reqUpdate,reqGetUserInfo,reqGetUserList} from '../api'
+import {AUTH_ERROR,
+  AUTH_SUCCESS,
+  UPDATE_USER_INFO,
+  RESET_USER_INFO,
+  UPDATE_USER_LIST,
+  RESET_USER_LIST} from './action-types'
 
 
 export const authSuccess = data => {
@@ -17,6 +22,20 @@ export const authError = data => {
     data
   }
 }
+export const updateUserInfo = data => {
+  return {
+    type:UPDATE_USER_INFO,
+    data
+  }
+}
+export const resetUserInfo = data => {
+  return {
+    type:RESET_USER_INFO,
+    data
+  }
+}
+export const updateUserList = data => ({type: UPDATE_USER_LIST, data});
+export const resetUserList = () => ({type: RESET_USER_LIST});
 //注册
 export const register = ({username, password, rePassword, type}) => {
   if (!username) {
@@ -97,6 +116,46 @@ export const update = ({header, post, company, salary,info,type}) => {
       })
       .catch(err => {
         dispatch(authError({msgErr:'网络错误'}))
+      })
+
+  }
+}
+//获取个人信息
+export const getUserInfo = () => {
+  return dispatch => {
+    reqGetUserInfo()
+      .then(({data}) => {
+        if (data.code === 0) {
+          //请求成功
+          dispatch(updateUserInfo(data.data));
+        }else{
+          //请求失败
+          dispatch(resetUserInfo({msgErr:data.msg}))
+
+        }
+      })
+      .catch(err => {
+        dispatch(resetUserInfo({msgErr:'网络错误'}))
+      })
+
+  }
+}
+//获取个人列表
+export const getUserList = type => {
+  return dispatch => {
+    reqGetUserList(type)
+      .then(({data}) => {
+        if (data.code === 0) {
+          //请求成功
+          dispatch(updateUserList(data.data));
+        }else{
+          //请求失败
+          dispatch(resetUserList())
+
+        }
+      })
+      .catch(err => {
+        dispatch(resetUserList())
       })
 
   }

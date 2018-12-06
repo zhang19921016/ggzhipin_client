@@ -7,15 +7,15 @@ import './index.less'
 const Item = TabBar.Item;
 class Footer extends Component {
   static propTypes = {
-    navList: PropTypes.array.isRequired
+    navList: PropTypes.array.isRequired,
+    type:PropTypes.string.isRequired
   }
   handlePress = path => {
     this.props.history.push(path);
   }
   render () {
     const navList = this.props.navList;
-    const type = '/laoban';
-    const filter = type === '/laoban'?'/dashen':'/laoban';
+    const filter = this.props.type === 'laoban'?'/dashen':'/laoban';
     const currList = navList.filter(item => {
       return filter === item.path?false:true
     })
