@@ -1,29 +1,60 @@
 import React, {Component} from 'react';
 import {List} from 'antd-mobile';
+import PropTypes from 'prop-types';
+import Cookies from 'js-cookie'
 const Item = List.Item;
 const Brief = Item.Brief;
 
 class Message extends Component {
+  static propTypes = {
+    chatMessages:PropTypes.object.isRequired
+  }
+  goChat = id => {
+    this.props.history.push(`/chat/${id}`)
+  }
   render () {
+//获取当前用户的userid
+    const userid = Cookies.get('userid');
+    const {users, chatMsgs} = this.props.chatMessages;
+    let users_id = {};
+    chatMsgs.forEach(item => {
+      //找到与当前用户不同的其他用户的id
+      const othersId = item.from === userid ? item.to : item.from;
+      console.log(othersId);
+      //保证users_id对象中有且值保存一份其他用户id和对应的值
+      users_id[othersId] = users[othersId];
+      //为了方便后面取id值，在给这个对象添加一个id
+      users_id[othersId].id = othersId;
+      users_id[othersId].message = item.message;
+      const time = Date.parse(item.createTime);
+      if (users_id[othersId].time) {
+        //说明之前添加过数据，将现在的数据和之前的数据进行比较
+        if (users_id[othersId].time < time) {
+          users_id[othersId].time = time;
+          users_id[othersId].message = item.message;
+        }
+      } else {
+        users_id[othersId].time = time;
+        users_id[othersId].message = item.message;
+      }
+    })
+    //将对象变成数组
+    const chatList = Object.values(users_id);
     return (
       <div>
         <List className="my-list">
-          <Item
-            arrow="horizontal"
-            thumb={require('../../assets/img/头像1.png')}
-            multipleLine
-            onClick={() => {}}
-          >
-            前端真是太苦逼了...<Brief>张鑫</Brief>
-          </Item>
-          <Item
-            arrow="horizontal"
-            thumb={require('../../assets/img/头像2.png')}
-            multipleLine
-            onClick={() => {}}
-          >
-            可不是,说多了都是眼泪...<Brief>李涛</Brief>
-          </Item>
+          {chatList.map((item,index) => {
+            return (
+              <Item key={index}
+                arrow="horizontal"
+                thumb={require(`../../assets/img/头像${+item.header+1}.png`)}
+                multipleLine
+                onClick={this.goChat.bind(null,item.id)}
+              >
+                {item.message}<Brief>{item.username}</Brief>
+              </Item>
+            )
+          })}
         </List>
       </div>
     )

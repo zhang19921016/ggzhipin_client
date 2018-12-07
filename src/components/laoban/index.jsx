@@ -12,6 +12,9 @@ class Laoban extends Component {
       this.props.getUserList('dashen');
     }
   }
+  goChat = id => {
+    this.props.history.push(`/chat/${id}`)
+  }
   render () {
     const userList = this.props.userList.filter(item => item.header)
     return (
@@ -20,7 +23,7 @@ class Laoban extends Component {
           <WhiteSpace size="lg" />
           {userList.map((item,index) => {
             return (
-              <div key={index}>
+              <div key={index} onClick={this.goChat.bind(null,item._id)}>
                 <Card>
                   <Card.Header
                     thumb={require(`../../assets/img/头像${+item.header+1}.png`)}

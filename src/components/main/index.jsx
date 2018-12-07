@@ -11,16 +11,18 @@ import DashenInfo from '../../containers/dashenInfo'
 import LaobanInfo from '../../containers/laobanInfo'
 import Laoban from '../../containers/laoban'
 import Dashen from '../../containers/dashen'
-import Message from '../message'
+import Message from '../../containers/message'
 import Personal from '../../containers/personal'
 import Footer from '../footer'
+import Chat from '../../containers/chat'
 import './index.less'
 
 
 export default class Main extends Component {
   static propTypes = {
     user:PropTypes.object.isRequired,
-    getUserInfo:PropTypes.func.isRequired
+    getUserInfo:PropTypes.func.isRequired,
+    getChatList:PropTypes.func.isRequired
   }
   navList = [
     {path: '/laoban', title: '大神列表', icon: 'laoban', text: '大神'},
@@ -28,9 +30,11 @@ export default class Main extends Component {
     {path: '/message', title: '消息列表', icon: 'message', text: '消息'},
     {path: '/personal', title: '个人中心', icon: 'personal', text: '个人'},
   ]
+  componentDidMount () {
+    this.props.getChatList();
+  }
   render() {
     const userid = Cookies.get('userid')
-
     //登陆时是否有cookie
     if (!userid) {
       return <Redirect to='/login'/>
@@ -58,6 +62,7 @@ export default class Main extends Component {
           <Route path='/dashen' component={Dashen}/>
           <Route path='/message' component={Message}/>
           <Route path='/personal' component={Personal}/>
+          <Route path='/chat/:id' component={Chat}/>
         </div>
         {currList?<Footer navList={this.navList} type={this.props.user.type}/>:null}
       </div>

@@ -9,6 +9,8 @@ import Register from './containers/register'
 import Main from './containers/main'
 import './assets/less/msg-err.less'
 
+import './test/socketio_test'
+
 ReactDOM.render((
 <Provider store={store}>
   <HashRouter>
