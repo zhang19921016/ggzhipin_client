@@ -3,7 +3,7 @@
  */
 
 import React, {Component} from 'react'
-import {NavBar, List, InputItem , Icon} from 'antd-mobile'
+import {NavBar, List, InputItem , Icon ,Grid} from 'antd-mobile'
 import PropTypes from 'prop-types';
 import Cookies from 'js-cookie'
 import './index.less'
@@ -16,7 +16,26 @@ export default class Chat extends Component {
     chatMessages:PropTypes.object.isRequired
   }
   state = {
-    message:''
+    message:'',
+    isShow:false
+  }
+  componentWillMount () {
+    const emojis = ['😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣'
+      ,'😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣','😀', '😁', '🤣', '🙉'];
+    this.emojis = emojis.map((item) => ({
+      text: item,
+    }));
+  }
+  componentDidMount() {
+    // 初始显示列表
+    window.scrollTo(0, document.body.offsetHeight)
+  }
+
+  componentDidUpdate () {
+    // 更新显示列表
+    window.scrollTo(0, document.body.offsetHeight)
   }
   goBack = () => {
     this.props.history.goBack();
@@ -30,16 +49,26 @@ export default class Chat extends Component {
     const to = this.props.match.params.id;
     //将消息发送到服务器
     this.props.sendMessage({message, from, to});
+    //清空message的装态
+    this.setState({
+      message:''
+    })
   }
 
-
-  handleChange = val => {
-    this.setState({message: val});
-  }
   change = val => {
     this.setState({
       message:val
     })
+  }
+  emojisShow = () =>{
+    this.setState({
+      isShow:!this.state.isShow
+    })
+    if (!this.state.isShow) {
+      setTimeout(function () {
+        window.dispatchEvent(new Event('resize'));
+      }, 0)
+    }
   }
   render() {
     const {users,chatMsgs} = this.props.chatMessages;
@@ -65,8 +94,8 @@ export default class Chat extends Component {
     })
     return (
       <div id='chat-page'>
-        <NavBar icon={<Icon type="left" onClick={this.goBack}/>}>{others.username}</NavBar>
-        <List>
+        <NavBar icon={<Icon type="left" onClick={this.goBack} />} style={{position:'fixed',left:0,top:0,width:'100%',zIndex:50}}>{others.username}</NavBar>
+        <List className="listNodes">
           {currMsgs.map((item,index) =>{
             if (item.from === from) {
               return (
@@ -89,16 +118,32 @@ export default class Chat extends Component {
           })}
 
         </List>
-
-        <div className='am-tab-bar'>
+        <div height={this.state.isShow?'180px':0}></div>
+        <div style={{position:'fixed',left:0,bottom:0,width:'100%',zIndex:50}}>
           <InputItem
+            value={this.state.message}
             placeholder="请输入"
             onChange={this.change}
             extra={
-              <span onClick={this.sendMessage}>发送</span>
+              <div>
+                <span onClick={this.emojisShow}>😀</span>&nbsp;&nbsp;
+                <span onClick={this.sendMessage}>发送</span>
+              </div>
             }
           />
+          {
+            this.state.isShow?
+              <Grid
+                data={this.emojis}
+                isCarousel
+                columnNum={8}
+                carouselMaxRow={4}
+                onClick={el => {this.setState({message: this.state.message + el.text})}}
+              />:
+              null
+          }
         </div>
+
       </div>
     )
   }
